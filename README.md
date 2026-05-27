@@ -9,3 +9,9 @@ code).
 
 Simply compile and run the colorClustering.py file and your 
 visual will show up!
+
+* Just make sure that the file passed to your .read_csv()
+  function in your colorClustering.py file match so that your
+  model will output the proper data!
+
+Have fun.
