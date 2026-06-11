@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 
-numPts = 500
+numPts = 1000
 
 rgbVals = np.random.randint(0, 256, size = (numPts, 3))
 
