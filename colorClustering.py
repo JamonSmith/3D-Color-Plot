@@ -90,13 +90,14 @@ def kMeans(data, x, k):
 def printCentroids(centroids):
 
     print("Cluster Centers:")
+    print()
 
     for i, centroid in enumerate(centroids): 
         
         colorName = nameColor(centroid[0], centroid[1], centroid[2])
         
         print(
-            f"Cluster {i + 1}: \t{colorName} "
+            f"\tCluster {i + 1}: \t{colorName} "
             f"(R = {centroid[0]:.2f}, "
             f"G = {centroid[1]:.2f}, "
             f"B = {centroid[2]:.2f})"
@@ -179,11 +180,40 @@ def main():
     
     km, centroids = kMeans(data, x, k)
     
-    printCentroids(centroids)
+    while True:
     
-    plotData(data, centroids, k)
+        print()
+        print("========== RGB Color Clustering ==========")
+        print()
+        print("1.) View Cluster Centroids")
+        print("2.) View 3D Visualization")
+        print("3.) Classify a Color")
+        print("0.) Exit Program")
+        print()
+        
+        userInput = int(input("Choose a command; 1, 2, 3, or 0: "))
+        print()
+        
+        if userInput == 1:
     
-    classifyColor(km, centroids)
+            printCentroids(centroids)
     
+        elif userInput == 2:
+        
+            plotData(data, centroids, k)
+    
+        elif userInput == 3:
+            
+            classifyColor(km, centroids)
+    
+        elif userInput == 0:
+        
+            print("Thank you, goodbye!")
+            break
+            
+        else:
+            
+            print("Invalid command, choose either 1, 2, 3, or 0")
+            
 if __name__ == "__main__":
     main()
