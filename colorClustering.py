@@ -4,6 +4,9 @@ from sklearn.cluster import KMeans
 
 # ANSI ESCAPE CODES
 RED = "\033[31m"
+GREEN = "\033[32m"
+YELLOW = "\033[33m"
+BLUE = "\033[34m"
 RESET = "\033[0m"
 
 def on_key(event):
@@ -105,6 +108,9 @@ def printCentroids(centroids):
 
 def plotData(data, centroids, k):
 
+    print("Press 0 to close the visual")
+    print()
+    
     r = data["R"]
     g = data["G"]
     b = data["B"]
@@ -168,10 +174,8 @@ def classifyColor(km, centroids):
 def main():
     
     print() 
-    print(RED + "Jamon Smith" + RESET)   
-    print() 
-    print("Press 0 to close the visual")
-    print() 
+    print(GREEN + "Jamon Smith" + RESET)   
+    print()  
     
     file = "rgb_data.csv"
     k = 27
