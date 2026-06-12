@@ -1,8 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import numpy as np
 from sklearn.cluster import KMeans
 
+# ANSI ESCAPE CODES
 RED = "\033[31m"
 RESET = "\033[0m"
 
@@ -10,8 +10,7 @@ def on_key(event):
     
     if event.key == '0':
         
-        plt.close()
-        
+        plt.close()       
 
 def getBin(val):
     
@@ -70,63 +69,121 @@ def nameColor(r, g, b):
         "HHH": "White/Light"
     }
 
-    return colorNames[label]
+    return colorNames[label] 
+
+def loadData(fileName):
     
-print(RED + "Press 0 to close the visual" + RESET)
-print()  
-
-data = pd.read_csv("rgb_data.csv")
-
-r = data["R"]
-g = data["G"]
-b = data["B"]
-
-x = data[["R", "G", "B"]]
-
-k = 27
-
-km = KMeans(n_clusters = k, random_state = 0, n_init = "auto")
-data["Cluster"] = km.fit_predict(x)
-
-centroids = km.cluster_centers_
-
-print("Cluster Centers:")
-
-for i, centroid in enumerate(centroids): 
+    data = pd.read_csv(fileName) 
+    x = data[["R", "G", "B"]]
     
-    colorName = nameColor(centroid[0], centroid[1], centroid[2])
+    return data, x
+
+def kMeans(data, x, k):
+
+    km = KMeans(n_clusters = k, random_state = 0, n_init = "auto")
+    data["Cluster"] = km.fit_predict(x)
     
+    centroids = km.cluster_centers_
+    
+    return km, centroids
+
+def printCentroids(centroids):
+
+    print("Cluster Centers:")
+
+    for i, centroid in enumerate(centroids): 
+        
+        colorName = nameColor(centroid[0], centroid[1], centroid[2])
+        
+        print(
+            f"Cluster {i + 1}: \t{colorName} "
+            f"(R = {centroid[0]:.2f}, "
+            f"G = {centroid[1]:.2f}, "
+            f"B = {centroid[2]:.2f})"
+        )
+
+def plotData(data, centroids, k):
+
+    r = data["R"]
+    g = data["G"]
+    b = data["B"]
+    
+    colors = data[["R", "G", "B"]] / 255.0
+    
+    figure = plt.figure()
+    ax = figure.add_subplot(111, projection = "3d")
+    
+    ax.scatter(r, g, b, c = colors, s = 10, alpha = 0.4)
+    
+    ax.scatter(centroids[:, 0], centroids[:, 1], centroids[:, 2], c = "black", s = 150, marker = "x", label = "Centroids")
+    
+    for i, centroid in enumerate(centroids): 
+        
+        colorName = nameColor(centroid[0], centroid[1], centroid[2])
+        
+        ax.text(centroid[0] + 5, centroid[1] + 5, centroid[2] + 5, colorName, fontsize = 8)
+    
+    ax.set_xlabel("R")
+    ax.set_ylabel("G")
+    ax.set_zlabel("B")
+    
+    ax.set_xlim(0, 255)
+    ax.set_ylim(0, 255)
+    ax.set_zlim(0, 255)
+    
+    ax.set_title(f"RGB Color Space With K-Means Clustering, K = {k}")
+    ax.legend()
+    
+    figure.canvas.mpl_connect('key_press_event', on_key)        
+    
+    plt.show()
+    
+def classifyColor(km, centroids):
+
+    print()
+    print("Enter RGB values:")
+    
+    rComponent = int(input("Enter Red Component (0-255): "))
+    gComponent = int(input("Enter Green Component (0-255): "))
+    bComponent = int(input("Enter Blue Component (0-255): "))
+    
+    userColor = [[rComponent, gComponent, bComponent]]
+    
+    index = km.predict(userColor)[0]
+    centroid = centroids[index]
+    
+    color = nameColor(centroid[0], centroid[1], centroid[2])
+    print()
+    
+    print(f"Your color belongs to Cluster {index + 1}: {color}")
+    print()
     print(
-        f"Cluster {i + 1}: \t{colorName} "
-        f"(R = {centroid[0]:.2f}, G = {centroid[1]:.2f}, B = {centroid[2]:.2f})"
+        f"Nearest centroid: "
+        f"R = {centroid[0]:.2f}, "
+        f"G = {centroid[1]:.2f}, "
+        f"B = {centroid[2]:.2f})"
     )
 
-colors = data[["R", "G", "B"]] / 255.0
-
-figure = plt.figure()
-ax = figure.add_subplot(111, projection = "3d")
-
-ax.scatter(r, g, b, c = colors, s = 10, alpha = 0.4)
-
-ax.scatter(centroids[:, 0], centroids[:, 1], centroids[:, 2], c = "black", s = 150, marker = "x", label = "Centroids")
-
-for i, centroid in enumerate(centroids): 
+def main():
     
-    colorName = nameColor(centroid[0], centroid[1], centroid[2])
+    print() 
+    print(RED + "Jamon Smith" + RESET)   
+    print() 
+    print("Press 0 to close the visual")
+    print() 
     
-    ax.text(centroid[0] + 5, centroid[1] + 5, centroid[2] + 5, colorName, fontsize = 8)
-
-ax.set_xlabel("R")
-ax.set_ylabel("G")
-ax.set_zlabel("B")
-
-ax.set_xlim(0, 255)
-ax.set_ylim(0, 255)
-ax.set_zlim(0, 255)
-
-ax.set_title("RGB Color Space With K-Means Clustering, K = 27")
-ax.legend()
-
-figure.canvas.mpl_connect('key_press_event', on_key)        
-
-plt.show()
+    file = "rgb_data.csv"
+    k = 27
+    
+    data, x = loadData(file)
+    
+    km, centroids = kMeans(data, x, k)
+    
+    printCentroids(centroids)
+    
+    plotData(data, centroids, k)
+    
+    classifyColor(km, centroids)
+    
+if __name__ == "__main__":
+    main()
