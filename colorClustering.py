@@ -187,6 +187,9 @@ def main():
     while True:
     
         print()
+        print(BLUE + "GMM VERSION BRANCH" + RESET)
+        
+        print()
         print("========== RGB Color Clustering ==========")
         print()
         print("1.) View Cluster Centroids")
