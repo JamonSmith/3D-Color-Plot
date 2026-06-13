@@ -82,15 +82,6 @@ def loadData(fileName):
     
     return data, x
 
-def kMeans(data, x, k):
-
-    km = KMeans(n_clusters = k, random_state = 0, n_init = "auto")
-    data["Cluster"] = km.fit_predict(x)
-    
-    centroids = km.cluster_centers_
-    
-    return km, centroids
-
 def gmm(data, x, k):
 
     gauss = GaussianMixture(n_components = k, random_state = 0)
