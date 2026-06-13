@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
+from sklearn.mixture import GaussianMixture
 
 # ANSI ESCAPE CODES
 RED = "\033[31m"
@@ -90,6 +91,16 @@ def kMeans(data, x, k):
     
     return km, centroids
 
+def gmm(data, x, k):
+
+    gauss = GaussianMixture(n_components = k, random_state = 0)
+    
+    data["GMM Cluster"] = gauss.fit_predict(x)
+    
+    centroids = gauss.means_
+    
+    return gauss, centroids
+
 def printCentroids(centroids):
 
     print("Cluster Centers:")
@@ -177,17 +188,17 @@ def main():
     print(GREEN + "Jamon Smith" + RESET)   
     print()  
     
+    print()
+    print(BLUE + "GMM VERSION BRANCH" + RESET)
+    
     file = "rgb_data.csv"
     k = 27
     
     data, x = loadData(file)
     
-    km, centroids = kMeans(data, x, k)
+    gauss, centroids = gmm(data, x, k)
     
     while True:
-    
-        print()
-        print(BLUE + "GMM VERSION BRANCH" + RESET)
         
         print()
         print("========== RGB Color Clustering ==========")
