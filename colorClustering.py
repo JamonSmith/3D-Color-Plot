@@ -140,7 +140,7 @@ def plotData(data, centroids, k):
     ax.set_ylim(0, 255)
     ax.set_zlim(0, 255)
     
-    ax.set_title(f"RGB Color Space With K-Means Clustering, K = {k}")
+    ax.set_title(f"RGB Color Space With Gauusian Mixture Model Clustering, {k} centers")
     ax.legend()
     
     figure.canvas.mpl_connect('key_press_event', on_key)        
