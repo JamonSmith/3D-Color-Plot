@@ -147,7 +147,7 @@ def plotData(data, centroids, k):
     
     plt.show()
     
-def classifyColor(km, centroids):
+def classifyColor(gauss, centroids):
 
     print()
     print("Enter RGB values:")
@@ -158,20 +158,21 @@ def classifyColor(km, centroids):
     
     userColor = [[rComponent, gComponent, bComponent]]
     
-    index = km.predict(userColor)[0]
-    centroid = centroids[index]
+    probabilities = gauss.predict_proba(userColor)[0]
     
-    color = nameColor(centroid[0], centroid[1], centroid[2])
-    print()
+    topMatches = probabilities.argsort()[-3:][::-1]
     
-    print(f"Your color belongs to Cluster {index + 1}: {color}")
     print()
-    print(
-        f"Nearest centroid: "
-        f"R = {centroid[0]:.2f}, "
-        f"G = {centroid[1]:.2f}, "
-        f"B = {centroid[2]:.2f})"
-    )
+    print("Top Matches:")
+    print()
+
+    for tm in topMatches:
+        
+        centroid = centroids[tm]
+        color = nameColor(centroid[0], centroid[1], centroid[2])
+        prob = probabilities[tm] * 100
+        
+        print(f"\t{color}: {prob:.2f}%")
 
 def main():
     
@@ -213,7 +214,7 @@ def main():
     
         elif userInput == 3:
             
-            classifyColor(km, centroids)
+            classifyColor(gauss, centroids)
     
         elif userInput == 0:
         
