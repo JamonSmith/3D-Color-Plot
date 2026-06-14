@@ -156,7 +156,10 @@ def classifyColor(gauss, centroids):
     gComponent = int(input("Enter Green Component (0-255): "))
     bComponent = int(input("Enter Blue Component (0-255): "))
     
-    userColor = [[rComponent, gComponent, bComponent]]
+    userColor = pd.DataFrame( 
+        [[rComponent, gComponent, bComponent]],
+        columns = ["R", "G", "B"]
+    )    
     
     probabilities = gauss.predict_proba(userColor)[0]
     
