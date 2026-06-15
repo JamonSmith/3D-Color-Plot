@@ -110,7 +110,7 @@ def printCentroids(centroids):
 
 def plotData(data, centroids, k):
 
-    print("Press 0 to close the visual")
+    print(YELLOW + "Press 0 to close the visual" + RESET)
     print()
     
     r = data["R"]
@@ -177,6 +177,34 @@ def classifyColor(gauss, centroids):
         
         print(f"\t{color}: {prob:.2f}%")
 
+def previewColor():
+
+    print()
+    print("Enter RGB values:")
+    
+    rComponent = int(input("Enter Red Component (0-255): "))
+    gComponent = int(input("Enter Green Component (0-255): "))
+    bComponent = int(input("Enter Blue Component (0-255): "))
+    print()
+    
+    print(YELLOW + "Press 0 to close the visual" + RESET)
+    print()
+    
+    color = (rComponent / 255.0, gComponent / 255.0, bComponent / 255.0)
+    
+    figure, ax = plt.subplots(figsize = (4, 4))
+    
+    ax.set_facecolor(color)
+    
+    ax.set_xticks([])
+    ax.set_yticks([])
+    
+    ax.set_title(f"RGB({rComponent}, {gComponent}, {bComponent})")
+    
+    figure.canvas.mpl_connect('key_press_event', on_key) 
+    
+    plt.show()
+
 def main():
     
     print() 
@@ -201,6 +229,7 @@ def main():
         print("1.) View Cluster Centroids")
         print("2.) View 3D Visualization")
         print("3.) Classify a Color")
+        print("4.) Preview a Color")
         print("0.) Exit Program")
         print()
         
@@ -219,6 +248,10 @@ def main():
             
             classifyColor(gauss, centroids)
     
+        elif userInput == 4:
+            
+            previewColor()
+        
         elif userInput == 0:
         
             print("Thank you, goodbye!")
